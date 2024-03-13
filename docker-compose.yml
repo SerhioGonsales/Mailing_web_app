@@ -1,0 +1,171 @@
+version: '3'
+
+services:
+  mysqldb:
+    image: mysql:5.7
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=email_db
+      - MYSQL_DATABASE=content_db
+      - MYSQL_DATABASE=message_db
+    ports:
+      - "3308:3306"
+    volumes:
+      - db:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+  eureka-server:
+    build: ./eureka_server
+    ports:
+      - "8761:8761"
+    environment:
+      SPRING_APPLICATION_NAME: eureka-server
+      EUREKA_INSTANCE_HOSTNAME: eureka-server
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+      EUREKA_CLIENT_REGISTERWITHEUREKA: false
+      EUREKA_CLIENT_FETCHREGISTRY: false
+  api-gateway:
+    build: ./api_gateway
+    ports:
+      - "8765:8765"
+    depends_on:
+      - eureka-server
+    environment:
+      SPRING_APPLICATION_NAME: api-gateway
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+      EUREKA_INSTANCE_PREFERIPADDRESS: true
+      SPRING_CLOUD_GATEWAY_DISCOVERY_LOCATOR_ENABLED: true
+      SPRING_CLOUD_GATEWAY_DISCOVERY_LOCATOR_LOWER_CASE_SERVICE_ID: true
+  mailing-service:
+    build: ./mailing_service
+    env_file:
+      - .env
+    ports:
+      - "0:100"
+    depends_on:
+      - eureka-server
+      - api-gateway
+      - mysqldb
+    environment:
+      SPRING_APPLICATION_NAME: mailing-service
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/email_db
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.MySQLDialect
+      SPRING_JPA_HIBERNATE_DDL_AUTO: validate
+      SPRING_MAIL_HOST: ${SPRING_MAIL_HOST}
+      SPRING_MAIL_PORT: ${SPRING_MAIL_PORT}
+      SPRING_MAIL_PROTOCOL: ${SPRING_MAIL_PROTOCOL}
+      SPRING_MAIL_USERNAME: ${SPRING_MAIL_USERNAME}
+      SPRING_MAIL_PASSWORD: ${SPRING_MAIL_PASSWORD}
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+      EUREKA_INSTANCE_PREFERIPADDRESS: true
+      LOGGING_LEVEL_ROOT: ERROR
+      LOGGING_LEVEL_COM_LUKUSHIN_MAILING_SERVICE: DEBUG
+      LOGGING_FILE_NAME: ./logs/mailing.log
+      LOGGING_PATTERN_CONSOLE: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+      LOGGING_PATTERN_FILE: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{35} - %msg%n"
+      ERROR_INCLUDE-MESSAGE: always
+      ERROR_INCLUDE-EXCEPTION: true
+      BASE_URL_MESSAGE_SERVICE: http://message-service:800/messages
+    volumes:
+      - upload_files:/var/upload_files
+  content-service:
+    build: ./content_service
+    ports:
+      - "0:900"
+    depends_on:
+      - eureka-server
+      - api-gateway
+      - mysqldb
+    environment:
+      SPRING_APPLICATION_NAME: content-service
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/content_db
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.MySQLDialect
+      SPRING_JPA_HIBERNATE_DDL_AUTO: validate
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+      EUREKA_INSTANCE_PREFERIPADDRESS: true
+      LOGGING_LEVEL_ROOT: ERROR
+      LOGGING_LEVEL_COM_LUKUSHIN_CONTENT_SERVICE: DEBUG
+      LOGGING_FILE_NAME: ./logs/content.log
+      LOGGING_PATTERN_CONSOLE: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+      LOGGING_PATTERN_FILE: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{35} - %msg%n"
+      ERROR_INCLUDE-MESSAGE: always
+      ERROR_INCLUDE-EXCEPTION: true
+      FILE_UPLOAD_DIR: /var/upload_files
+    volumes:
+      - upload_files:/var/upload_files
+  email-service:
+    build: ./email_service
+    ports:
+      - "0:200"
+    depends_on:
+      - eureka-server
+      - api-gateway
+      - mysqldb
+    environment:
+      SPRING_APPLICATION_NAME: email-service
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/email_db
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.MySQLDialect
+      SPRING_JPA_HIBERNATE_DDL_AUTO: validate
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+      EUREKA_INSTANCE_PREFERIPADDRESS: true
+      LOGGING_LEVEL_ROOT: ERROR
+      LOGGING_LEVEL_COM_LUKUSHIN_EMAIL_SERVICE: DEBUG
+      LOGGING_FILE_NAME: ./logs/email.log
+      LOGGING_PATTERN_CONSOLE: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+      LOGGING_PATTERN_FILE: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{35} - %msg%n"
+      ERROR_INCLUDE-MESSAGE: always
+      ERROR_INCLUDE-EXCEPTION: true
+  message-service:
+    build: ./message_service
+    ports:
+      - "0:800"
+    depends_on:
+      - eureka-server
+      - api-gateway
+      - mysqldb
+    environment:
+      SPRING_APPLICATION_NAME: message-service
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/message_db
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.MySQLDialect
+      SPRING_JPA_HIBERNATE_DDL_AUTO: validate
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+      EUREKA_INSTANCE_PREFERIPADDRESS: true
+      LOGGING_LEVEL_ROOT: ERROR
+      LOGGING_LEVEL_COM_LUKUSHIN_MESSAGE_SERVICE: DEBUG
+      LOGGING_FILE_NAME: ./logs/message.log
+      LOGGING_PATTERN_CONSOLE: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+      LOGGING_PATTERN_FILE: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{35} - %msg%n"
+      ERROR_INCLUDE-MESSAGE: always
+      ERROR_INCLUDE-EXCEPTION: true
+      BASE_URL_CONTENT_SERVICE: http://content-service:900/content
+  view-service:
+    build: ./view_service
+    ports:
+      - "8080:8080"
+    depends_on:
+      - eureka-server
+    environment:
+      SPRING_APPLICATION_NAME: view-service
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+      EUREKA_INSTANCE_PREFERIPADDRESS: true
+      LOGGING_LEVEL_ROOT: ERROR
+      LOGGING_LEVEL_COM_LUKUSHIN_VIEW_SERVICE: DEBUG
+      LOGGING_FILE_NAME: ./logs/view.log
+      LOGGING_PATTERN_CONSOLE: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+      LOGGING_PATTERN_FILE: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{35} - %msg%n"
+      ERROR_INCLUDE-MESSAGE: always
+      ERROR_INCLUDE-EXCEPTION: true
+      BASE_URL_CONTENT_SERVICE: http://content-service:900/content
+      BASE_URL_EMAIL_SERVICE: http://email-service:200/emails
+      BASE_URL_MAILING_SERVICE: http://mailing-service:100/mailing
+volumes:
+  db:
+  upload_files:

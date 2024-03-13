@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: ${SPRING_APPLICATION_NAME}
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE}
+  instance:
+    preferIpAddress: ${EUREKA_INSTANCE_PREFERIPADDRESS}
+logging:
+  level:
+    root: ${LOGGING_LEVEL_ROOT}
+    com.lukushin.view_service: ${LOGGING_LEVEL_COM_LUKUSHIN_VIEW_SERVICE}
+  file:
+    name: ${LOGGING_FILE_NAME}
+  pattern:
+    console: ${LOGGING_PATTERN_CONSOLE}
+    file: ${LOGGING_PATTERN_FILE}
+server:
+  port: 8080
+  error:
+    include-message: ${ERROR_INCLUDE-MESSAGE}
+    include-exception: ${ERROR_INCLUDE-EXCEPTION}
+baseUrl:
+  contentService: ${BASE_URL_CONTENT_SERVICE}
+  emailService: ${BASE_URL_EMAIL_SERVICE}
+  mailingService: ${BASE_URL_MAILING_SERVICE}

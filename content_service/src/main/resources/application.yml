@@ -1,0 +1,74 @@
+spring:
+  application:
+    name: ${SPRING_APPLICATION_NAME}
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+  jpa:
+    properties:
+      hibernate:
+        dialect: ${SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT}
+    hibernate:
+      ddl-auto: ${SPRING_JPA_HIBERNATE_DDL_AUTO}
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE}
+  instance:
+    preferIpAddress: ${EUREKA_INSTANCE_PREFERIPADDRESS}
+logging:
+  level:
+    root: ${LOGGING_LEVEL_ROOT}
+    com.lukushin.content_service: ${LOGGING_LEVEL_COM_LUKUSHIN_CONTENT_SERVICE}
+  file:
+    name: ${LOGGING_FILE_NAME}
+  pattern:
+    console: ${LOGGING_PATTERN_CONSOLE}
+    file: ${LOGGING_PATTERN_FILE}
+server:
+  port: 900
+  error:
+    include-message: ${ERROR_INCLUDE-MESSAGE}
+    include-exception: ${ERROR_INCLUDE-EXCEPTION}
+file:
+  upload-dir: ${FILE_UPLOAD_DIR}
+
+#server:
+#  # TODO поменять на 0
+#  port: 53220
+#
+#spring:
+#  application:
+#    name: content-service
+#  jpa:
+#    generate-ddl: 'false'
+#    show-sql: 'false'
+#    hibernate:
+#      ddl-auto: validate
+#  datasource:
+#    # TODO поменять порт на 3308 при деплое в докер
+#    url: jdbc:mysql://localhost:3306/content_db
+#    username: root
+#    password: root
+#
+#eureka:
+#  client:
+#    serviceUrl:
+#      defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}
+#  instance:
+#    preferIpAddress: true
+#
+#logging:
+#  level:
+#    root: ERROR
+#    com.lukushin.content.service: DEBUG
+#  file:
+#    name: ./logs/content.log
+#  pattern:
+#    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+#    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{35} - %msg%n"
+#
+#file:
+#  upload-dir: C:\Users\av273\IdeaProjects\Mailing_app\content-service\src\main\resources\uploads
+##  upload-dir: /content-service\src\main\resources\uploads

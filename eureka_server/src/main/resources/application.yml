@@ -1,0 +1,23 @@
+server:
+  port: 8761
+spring:
+  application:
+    name: ${SPRING_APPLICATION_NAME}
+eureka:
+  instance:
+    hostname: ${EUREKA_INSTANCE_HOSTNAME}
+  client:
+    registerWithEureka: ${EUREKA_CLIENT_REGISTERWITHEUREKA}
+    fetchRegistry: ${EUREKA_CLIENT_FETCHREGISTRY}
+    serviceUrl:
+      defaultZone: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE}
+
+## url where microservices will be registered
+#eureka.client.service-url.defaultZone=http://localhost:8081/mailing
+#
+## disable eureka logging
+#logging.level.com.netflix.eureka=OFF
+#logging.level.com.netflix.discovery=OFF
+#
+## logging pattern
+#logging.pattern.console=%C{1.} [%-5level] %d{HH:mm:ss} - %msg%n

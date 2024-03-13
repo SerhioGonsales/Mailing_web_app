@@ -1,0 +1,35 @@
+spring:
+  application:
+    name: ${SPRING_APPLICATION_NAME}
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+  jpa:
+    properties:
+      hibernate:
+        dialect: ${SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT}
+    hibernate:
+      ddl-auto: ${SPRING_JPA_HIBERNATE_DDL_AUTO}
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE}
+  instance:
+    preferIpAddress: ${EUREKA_INSTANCE_PREFERIPADDRESS}
+logging:
+  level:
+    root: ${LOGGING_LEVEL_ROOT}
+    com.lukushin.message_service: ${LOGGING_LEVEL_COM_LUKUSHIN_MESSAGE_SERVICE}
+  file:
+    name: ${LOGGING_FILE_NAME}
+  pattern:
+    console: ${LOGGING_PATTERN_CONSOLE}
+    file: ${LOGGING_PATTERN_FILE}
+server:
+  port: 800
+  error:
+    include-message: ${ERROR_INCLUDE-MESSAGE}
+    include-exception: ${ERROR_INCLUDE-EXCEPTION}
+baseUrl:
+  contentService: ${BASE_URL_CONTENT_SERVICE}
