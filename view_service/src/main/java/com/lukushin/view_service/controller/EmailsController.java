@@ -41,7 +41,7 @@ public class EmailsController {
         return "emails";
     }
 
-    @PostMapping("/deleteAllEmails")
+    @GetMapping("/deleteAllEmails")
     public String deleteAllEmails(Model model){
         emailService.deleteAllEmails();
         viewUtils.getEmailStatisticsForEmailsPage(model);

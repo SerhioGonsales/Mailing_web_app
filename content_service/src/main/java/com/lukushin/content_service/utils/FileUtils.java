@@ -20,9 +20,14 @@ import java.nio.charset.StandardCharsets;
 public class FileUtils {
 
     @Value("${file.upload-dir}")
-    private String uploadPath;
+    String uploadPath;
+
+    private final AttachedFileRepository attachedFileRepository;
+
     @Autowired
-    private AttachedFileRepository attachedFileRepository;
+    public FileUtils(AttachedFileRepository attachedFileRepository) {
+        this.attachedFileRepository = attachedFileRepository;
+    }
 
     // метод парсит HTML файл и возвращает объект Text
     public Text convertHTMLtoTextEntity(MultipartFile file) {
@@ -88,6 +93,7 @@ public class FileUtils {
         for (File file : files){
             file.delete();
         }
+
         log.info("All files deleted");
         return true;
     }

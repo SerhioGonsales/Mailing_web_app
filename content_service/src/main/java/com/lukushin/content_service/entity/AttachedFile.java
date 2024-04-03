@@ -21,4 +21,11 @@ public class AttachedFile {
         this.filePath = filePath;
         this.fileName = fileName;
     }
+
+    // конструктор для тестов
+    public AttachedFile(Long id, String filePath, String fileName){
+        this.id = id;
+        this.filePath = filePath;
+        this.fileName = fileName;
+    }
 }

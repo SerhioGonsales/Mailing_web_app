@@ -105,8 +105,8 @@ public class MailingService {
     private void waitForSendNextEmail() {
         try {
             // TODO поменять время
-//            Thread.sleep(1_800_000); // 30 минут
-            Thread.sleep(2000); // 2 секунды
+            Thread.sleep(1_800_000); // 30 минут
+//            Thread.sleep(2000); // 2 секунды
         } catch (InterruptedException e) {
             log.error("Error while waiting for sent next email: ", e);
             Thread.currentThread().interrupt();

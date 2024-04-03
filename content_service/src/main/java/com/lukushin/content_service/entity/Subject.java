@@ -14,4 +14,16 @@ public class Subject {
     private Long id;
     @Column(name = "subject")
     private String subject;
+
+    public Subject(String subject) {
+        this.subject = subject;
+    }
+
+    // конструктор для тестов
+    public Subject(Long id, String subject) {
+        this.id = id;
+        this.subject = subject;
+    }
+
+
 }

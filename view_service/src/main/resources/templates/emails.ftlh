@@ -9,7 +9,7 @@
     <div> Всего в базе: ${emailsInBase} </div>
     <div>Адреса в работе: ${emailsNotSent} </div>
     <div> Отработанные адреса: ${emailsIsSent} </div>
-    <form method="get">
+    <form method="GET">
         <div>
             <button type="submit" formaction="/resetSentStatus"
                     class="btn btn-outline-danger btn-sm mt-2">Сбросить отработанные адреса</button>

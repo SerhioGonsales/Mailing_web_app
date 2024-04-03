@@ -21,5 +21,12 @@ public class Text {
         this.text = text;
         this.fileName = fileName;
     }
+
+    // конструктор для тестов
+    public Text(Long id, String text, String fileName) {
+        this.id = id;
+        this.text = text;
+        this.fileName = fileName;
+    }
 }
 
