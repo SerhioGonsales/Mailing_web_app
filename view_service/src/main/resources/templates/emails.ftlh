@@ -7,7 +7,7 @@
         <br>
     </#if>
     <div> Всего в базе: ${emailsInBase} </div>
-    <div>Адреса в работе: ${emailsNotSent} </div>
+    <div> Адреса в работе: ${emailsNotSent} </div>
     <div> Отработанные адреса: ${emailsIsSent} </div>
     <form method="GET">
         <div>
